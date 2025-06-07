@@ -3,15 +3,24 @@ using UnityEngine;
 
 public class MovimentoBasico : NetworkBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private InputsCliente inputs;
+    [SerializeField] float velocidade;
+
+    private void Awake()
+    {
+        inputs = new InputsCliente();
+        inputs.Enable();
+    }
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (IsOwner)
+        {
+        }
     }
 }
