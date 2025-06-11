@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 326505794188822984}
   - component: {fileID: 2314066961558248920}
   - component: {fileID: 1520286705270227341}
-  - component: {fileID: 7147993025372776327}
+  - component: {fileID: 7968393018378627736}
   m_Layer: 0
   m_Name: Jogador
   m_TagString: Untagged
@@ -158,7 +158,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &7147993025372776327
+--- !u!114 &7968393018378627736
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -191,9 +191,9 @@ MonoBehaviour:
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01

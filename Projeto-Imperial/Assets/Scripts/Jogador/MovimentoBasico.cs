@@ -16,17 +16,23 @@ public class MovimentoBasico : NetworkBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _inputs = new InputsCliente();
     }
-    void Start()
-    {
-
-    }
     private void Update()
     {
          if (IsServer)
          {
              transform.position += new Vector3(_movimentoServidor.x, _movimentoServidor.y) * _velocidade * Time.deltaTime;
-         }
-        
+         }       
+    }
+   
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner) //Ativa o sistema de inputs apenas para o cliente dono do objeto
+        {
+            _inputs.Enable();
+            _inputs.Gameplay.Movimento.performed += InputMovimnetoFeito; //é um evento que é chamado quando esse input é realizado,
+            _inputs.Gameplay.Movimento.canceled += InputMovimnetoCancelado;
+
+        }     
     }
     private void OnDisable() //É chamado localmente porque os métodos sao locais e é mais abrangente que o networkDespawn
     {
@@ -36,16 +42,6 @@ public class MovimentoBasico : NetworkBehaviour
             _inputs.Gameplay.Movimento.canceled -= InputMovimnetoCancelado;
             _inputs.Disable();
         }
-    }
-    public override void OnNetworkSpawn()
-    {
-        if (IsOwner) //Ativa o sistema de inputs apenas para o cliente dono do servidor
-        {
-            _inputs.Enable();
-            _inputs.Gameplay.Movimento.performed += InputMovimnetoFeito; //é um evento que é chamado quando esse input é realizado,
-            _inputs.Gameplay.Movimento.canceled += InputMovimnetoCancelado;
-
-        }     
     }
     void InputMovimnetoFeito(InputAction.CallbackContext input )
     {
