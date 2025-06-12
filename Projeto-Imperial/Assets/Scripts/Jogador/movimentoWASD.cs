@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 
-public class MovimentoBasico : NetworkBehaviour
+public class movimentoWASD : NetworkBehaviour
 {
-    InputsCliente _inputs; //Variável que armazena a classe usada para os inputs do jogador
+    InputsClienteWASD _inputs; //Variável que armazena a classe usada para os inputs do jogador
     float _velocidade = 3;
     [SerializeField] Vector2 _movimentoAtual;
     [SerializeField] Vector2 _movimentoServidor;
@@ -14,7 +14,7 @@ public class MovimentoBasico : NetworkBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _inputs = new InputsCliente();
+        _inputs = new InputsClienteWASD();
     }
     private void Update()
     {

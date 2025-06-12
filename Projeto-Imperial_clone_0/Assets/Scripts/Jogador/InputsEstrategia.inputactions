@@ -1,0 +1,34 @@
+{
+    "name": "InputsEstrategia",
+    "maps": [
+        {
+            "name": "GamePlay",
+            "id": "db3f9c8f-5215-47b3-b51b-7d7b5cb74348",
+            "actions": [
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "baf8ae51-434c-4064-b2e3-825ed19cdf38",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "9fe16b6c-2aee-4ce3-a321-58f572637fee",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
