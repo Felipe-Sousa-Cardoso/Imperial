@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -21,20 +22,12 @@ public class TropaMovimento : NetworkBehaviour
     {
         if (IsServer)
         {
-            if (transform.position.x != _destinoDeMovimentoServidor.x)
-            {
-                transform.position =  Vector2.MoveTowards(transform.position, new Vector2(_destinoDeMovimentoServidor.x,transform.position.y),3*Time.deltaTime);
-            }
-            else
-            {
-               if (transform.position.y != _destinoDeMovimentoServidor.y)
-                {
-                    transform.position = Vector2.MoveTowards(transform.position, new Vector2(_destinoDeMovimentoServidor.y, transform.position.x), 3 * Time.deltaTime);
-                }
-            }
+            Movimento();
             
         }
     }
+
+
 
     public override void OnNetworkSpawn()
     {
@@ -47,7 +40,10 @@ public class TropaMovimento : NetworkBehaviour
         _inputs.Disable();
         _inputs.GamePlay.Click.performed -= inputFeito;
     }
-
+    private void Movimento()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, _destinoDeMovimentoServidor, Time.deltaTime * 5);
+    }
     void inputFeito(InputAction.CallbackContext input)
     {
         Vector2 posicaoMouse = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
