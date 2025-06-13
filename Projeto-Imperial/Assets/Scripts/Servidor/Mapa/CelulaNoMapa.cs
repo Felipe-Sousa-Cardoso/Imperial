@@ -9,6 +9,7 @@ public class CelulaNoMapa : MonoBehaviour
     void Start()
     {
         gameObject.name = Posição.x + "/" + Posição.y;
+        GetComponent<SpriteRenderer>().color = Color.red;
     }
 
     // Update is called once per frame
