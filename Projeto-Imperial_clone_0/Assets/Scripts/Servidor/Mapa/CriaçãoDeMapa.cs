@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class CriaçãoDeMapa : NetworkBehaviour
 {
-    List<InformacoesDaCelula> lista;
+    public static List<InformacoesDaCelula> lista;
     [SerializeField] GameObject CadaCélula; //Prefab de cada célula
-    [SerializeField] Transform mapa;
     [SerializeField] int _altura;
     [SerializeField] int _largura;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -29,23 +28,28 @@ public class CriaçãoDeMapa : NetworkBehaviour
             for (int indexAltura = 0; indexAltura < _altura; indexAltura++)
             {
                 Vector3 pos = new Vector3(indexLargura - _largura / 2, indexAltura - _altura / 2);
-                GameObject obj = Instantiate(CadaCélula,pos,Quaternion.identity, mapa);
+                GameObject obj = Instantiate(CadaCélula,pos,Quaternion.identity, transform);
+                //Servidor
                 obj.GetComponent<NetworkObject>().Spawn();
+                CelulaNoMapa celula = obj.GetComponent<CelulaNoMapa>();
                 lista.Add(
                     new InformacoesDaCelula
                     {
-                        celula = obj,
+                        celula = celula,
                         posi = pos,
                         transponivel = indexAltura == indexLargura
                     }
                     );
+                //InformaçõesDacélula              
+                celula.Posição.Value = pos;
+                celula.Transponivel.Value = indexAltura == indexLargura;
             }
         }
     }
 }
 public class InformacoesDaCelula
 {
-    public GameObject celula;
-    public Vector2 posi;
+    public CelulaNoMapa celula;
+    public Vector3 posi;
     public bool transponivel;
 }
