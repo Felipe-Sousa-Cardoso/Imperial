@@ -5,8 +5,9 @@ using UnityEngine.InputSystem;
 public class Jogador : NetworkBehaviour
 {
     [SerializeField] InputsEstrategia _inputs;
-    [SerializeField] CelulaNoMapa celulaSelecionada;
-    [SerializeField] GameObject objetoSelecionado;
+    [SerializeField] NetworkObject celulaSelecionada;
+    [SerializeField] CelulaNoMapa celulateste;
+    [SerializeField] NetworkObject objetoSelecionado;
     [SerializeField] GameObject prefabTropa;
     private void Awake()
     {
@@ -47,25 +48,34 @@ public class Jogador : NetworkBehaviour
     }
     void inputClickFeito(InputAction.CallbackContext input)
     {
-        print("sim");
         Vector2 posicaoMouse = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());//Usa o novo sistema de inputs para ler a posição do mouse
 
         RaycastHit2D hit = Physics2D.Raycast(posicaoMouse, Vector2.zero); //Cria um raycast entre a posição do mouse que colide com o terreno
-
         if (hit.collider != null && hit.collider.TryGetComponent(out CelulaNoMapa celula))
         {
-            foreach(InformacoesDaCelula inf in CriaçãoDeMapa.lista)
-            {
-                if (inf.posi == celula.Posição.Value)
-                {
-                    celulaSelecionada = inf.celula;
-                }
-            }
-            
-        }
-        if (hit.collider != null && hit.collider.TryGetComponent(out TropaMovimento tropa))
-        {
-            objetoSelecionado = tropa.gameObject;
+            print(celula.name);
+            NetworkObjectReference celularef = celula.GetComponent<NetworkObject>();
+            celulateste = celula; 
         }
     }
+    [ServerRpc]
+    void SelecionarCelulaServerRpc(NetworkObjectReference celulaRef)
+    {
+        if (celulaRef.TryGet(out NetworkObject netObj))
+        {
+            print(netObj.name);           
+            AtualizarClienteSelecionadoClientRpc(celulaRef);
+        }
+    }
+    [ClientRpc]
+    void AtualizarClienteSelecionadoClientRpc(NetworkObjectReference celulaRef)
+    {
+        if (celulaRef.TryGet(out NetworkObject netObj))
+        {
+            print(netObj.name+"ss");
+            celulaSelecionada = netObj;
+        }
+        
+    }
+
 }
