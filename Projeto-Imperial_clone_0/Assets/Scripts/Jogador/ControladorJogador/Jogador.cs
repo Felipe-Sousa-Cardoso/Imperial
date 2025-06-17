@@ -53,26 +53,32 @@ public class Jogador : NetworkBehaviour
 
         RaycastHit2D hit = Physics2D.Raycast(posicaoMouse, Vector2.zero); //Cria um raycast entre a posição do mouse que colide com o terreno
 
-        if (hit.collider != null && hit.collider.TryGetComponent(out CelulaNoMapa celula) && _objetoSelecionado!=null)
+        if (hit.collider != null && hit.collider.TryGetComponent(out CelulaNoMapa celula) && _objetoSelecionado!=null) //Verifica se o raycast 
+            //colidiu com a celua e tenta referenciar o componente CelulaNoMapa além de já estar com uma tropa selecionada
         {
            _celulaSelecionada = celula; 
         }
         if (hit.collider != null && hit.collider.TryGetComponent(out TropaMovimento tropa))
         {
-            _objetoSelecionado = tropa;
+            if (tropa.IsOwner)
+            {
+                _objetoSelecionado = tropa;
+            }
+            
         }
         if (_objetoSelecionado!=null && _celulaSelecionada != null)
         {
+            
             print("movimento");
             _objetoSelecionado.DestinoDeMovimentoServidor = _celulaSelecionada.Posição.Value;
             _objetoSelecionado.AdicionarPassos();
         }
     }
     [ServerRpc]
-    private void SpamarTropaServerRpc()
+    private void SpamarTropaServerRpc(ServerRpcParams rpcParams = default) 
     {
         GameObject obj = Instantiate(prefabTropa);
-        obj.GetComponent<NetworkObject>().Spawn();
+        obj.GetComponent<NetworkObject>().SpawnWithOwnership(rpcParams.Receive.SenderClientId); //.receive tem as informmações de quem chamou esse método
     }
 
 }

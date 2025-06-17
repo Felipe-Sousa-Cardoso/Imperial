@@ -39,11 +39,6 @@ public class TropaMovimento : NetworkBehaviour
             }                  
         }
     }
-
-
-
-
-
     public void AdicionarPassos()
     {
         for (int indexPasso = 0; indexPasso < 5; indexPasso++)
@@ -51,16 +46,21 @@ public class TropaMovimento : NetworkBehaviour
             if (_destinoDeMovimento.x != DestinoDeMovimentoServidor.x)
             {
                 _destinoDeMovimento.x = Mathf.MoveTowards(_destinoDeMovimento.x, DestinoDeMovimentoServidor.x, 1);
-                _passos.Add(_destinoDeMovimento);
+                adicionarPassosServerRpc(_destinoDeMovimento);
                 continue;
             }
             if (_destinoDeMovimento.y != DestinoDeMovimentoServidor.y)
             {
                 _destinoDeMovimento.y = Mathf.MoveTowards(_destinoDeMovimento.y, DestinoDeMovimentoServidor.y, 1);
-                _passos.Add(_destinoDeMovimento);
+                adicionarPassosServerRpc(_destinoDeMovimento);
                 continue;
             }
         }
+    }
+    [ServerRpc]
+    void adicionarPassosServerRpc(Vector3 destino)
+    {
+        _passos.Add(destino);
     }
 
 }
