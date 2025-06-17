@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -5,9 +6,8 @@ using UnityEngine.InputSystem;
 public class Jogador : NetworkBehaviour
 {
     [SerializeField] InputsEstrategia _inputs;
-    [SerializeField] NetworkObject celulaSelecionada;
-    [SerializeField] CelulaNoMapa celulateste;
-    [SerializeField] NetworkObject objetoSelecionado;
+    [SerializeField] CelulaNoMapa _celulaSelecionada;
+    [SerializeField] TropaMovimento _objetoSelecionado;
     [SerializeField] GameObject prefabTropa;
     private void Awake()
     {
@@ -21,15 +21,16 @@ public class Jogador : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (IsServer)
+        if (IsOwner)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                GameObject obj = Instantiate(prefabTropa);
-                obj.GetComponent<NetworkObject>().Spawn();
+                SpamarTropaServerRpc();
             }
-        }        
+        }           
     }
+   
+
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -51,31 +52,27 @@ public class Jogador : NetworkBehaviour
         Vector2 posicaoMouse = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());//Usa o novo sistema de inputs para ler a posição do mouse
 
         RaycastHit2D hit = Physics2D.Raycast(posicaoMouse, Vector2.zero); //Cria um raycast entre a posição do mouse que colide com o terreno
-        if (hit.collider != null && hit.collider.TryGetComponent(out CelulaNoMapa celula))
+
+        if (hit.collider != null && hit.collider.TryGetComponent(out CelulaNoMapa celula) && _objetoSelecionado!=null)
         {
-            print(celula.name);
-            NetworkObjectReference celularef = celula.GetComponent<NetworkObject>();
-            celulateste = celula; 
+           _celulaSelecionada = celula; 
+        }
+        if (hit.collider != null && hit.collider.TryGetComponent(out TropaMovimento tropa))
+        {
+            _objetoSelecionado = tropa;
+        }
+        if (_objetoSelecionado!=null && _celulaSelecionada != null)
+        {
+            print("movimento");
+            _objetoSelecionado.DestinoDeMovimentoServidor = _celulaSelecionada.Posição.Value;
+            _objetoSelecionado.AdicionarPassos();
         }
     }
     [ServerRpc]
-    void SelecionarCelulaServerRpc(NetworkObjectReference celulaRef)
+    private void SpamarTropaServerRpc()
     {
-        if (celulaRef.TryGet(out NetworkObject netObj))
-        {
-            print(netObj.name);           
-            AtualizarClienteSelecionadoClientRpc(celulaRef);
-        }
-    }
-    [ClientRpc]
-    void AtualizarClienteSelecionadoClientRpc(NetworkObjectReference celulaRef)
-    {
-        if (celulaRef.TryGet(out NetworkObject netObj))
-        {
-            print(netObj.name+"ss");
-            celulaSelecionada = netObj;
-        }
-        
+        GameObject obj = Instantiate(prefabTropa);
+        obj.GetComponent<NetworkObject>().Spawn();
     }
 
 }

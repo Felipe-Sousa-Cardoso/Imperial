@@ -7,12 +7,13 @@ using UnityEngine.InputSystem;
 
 public class TropaMovimento : NetworkBehaviour
 {
-    [SerializeField] Vector2 _destinoDeMovimento;
-    [SerializeField] Vector2 _destinoDeMovimentoServidor;
+    [SerializeField] Vector3 _destinoDeMovimento;
+    [SerializeField] Vector3 _destinoDeMovimentoServidor;
     [SerializeField] List<Vector2> _passos = new List<Vector2>();
 
     float x;
 
+    public Vector3 DestinoDeMovimentoServidor { get => _destinoDeMovimentoServidor; set => _destinoDeMovimentoServidor = value; }
 
     void Start()
     {
@@ -43,19 +44,19 @@ public class TropaMovimento : NetworkBehaviour
 
 
 
-    private void AdicionarPassos()
+    public void AdicionarPassos()
     {
         for (int indexPasso = 0; indexPasso < 5; indexPasso++)
         {
-            if (_destinoDeMovimento.x != _destinoDeMovimentoServidor.x)
+            if (_destinoDeMovimento.x != DestinoDeMovimentoServidor.x)
             {
-                _destinoDeMovimento.x = Mathf.MoveTowards(_destinoDeMovimento.x, _destinoDeMovimentoServidor.x, 1);
+                _destinoDeMovimento.x = Mathf.MoveTowards(_destinoDeMovimento.x, DestinoDeMovimentoServidor.x, 1);
                 _passos.Add(_destinoDeMovimento);
                 continue;
             }
-            if (_destinoDeMovimento.y != _destinoDeMovimentoServidor.y)
+            if (_destinoDeMovimento.y != DestinoDeMovimentoServidor.y)
             {
-                _destinoDeMovimento.y = Mathf.MoveTowards(_destinoDeMovimento.y, _destinoDeMovimentoServidor.y, 1);
+                _destinoDeMovimento.y = Mathf.MoveTowards(_destinoDeMovimento.y, DestinoDeMovimentoServidor.y, 1);
                 _passos.Add(_destinoDeMovimento);
                 continue;
             }
