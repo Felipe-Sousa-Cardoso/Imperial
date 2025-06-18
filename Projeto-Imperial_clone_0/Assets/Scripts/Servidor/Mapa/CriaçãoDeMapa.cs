@@ -28,7 +28,7 @@ public class CriaçãoDeMapa : NetworkBehaviour
             for (int indexAltura = 0; indexAltura < _altura; indexAltura++)
             {
                 Vector3 pos = new Vector3(indexLargura - _largura / 2, indexAltura - _altura / 2);
-                GameObject obj = Instantiate(CadaCélula,pos,Quaternion.identity, transform);
+                GameObject obj = Instantiate(CadaCélula,pos,Quaternion.identity);
                 //Servidor
                 obj.GetComponent<NetworkObject>().Spawn();
                 CelulaNoMapa celula = obj.GetComponent<CelulaNoMapa>();

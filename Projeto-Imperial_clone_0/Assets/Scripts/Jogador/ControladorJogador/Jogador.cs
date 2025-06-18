@@ -60,7 +60,7 @@ public class Jogador : NetworkBehaviour
         }
         if (hit.collider != null && hit.collider.TryGetComponent(out TropaMovimento tropa))
         {
-            if (tropa.IsOwner)
+            if (tropa.IsOwner) //Verifica se este jogador é o dono do objeto
             {
                 _objetoSelecionado = tropa;
             }
@@ -68,10 +68,17 @@ public class Jogador : NetworkBehaviour
         }
         if (_objetoSelecionado!=null && _celulaSelecionada != null)
         {
+            if (_objetoSelecionado.DestinoDeMovimentoServidor == _celulaSelecionada.Posição.Value) //Se a celula clicada foi a mesma da anterior 
+                //executa o movimento, caso seja diferente troca o valor da variável
+            {
+
+            }
+            else
+            {
+                _objetoSelecionado.DestinoDeMovimentoServidor = _celulaSelecionada.Posição.Value;
+                _objetoSelecionado.AdicionarPassos();
+            }
             
-            print("movimento");
-            _objetoSelecionado.DestinoDeMovimentoServidor = _celulaSelecionada.Posição.Value;
-            _objetoSelecionado.AdicionarPassos();
         }
     }
     [ServerRpc]
@@ -80,5 +87,7 @@ public class Jogador : NetworkBehaviour
         GameObject obj = Instantiate(prefabTropa);
         obj.GetComponent<NetworkObject>().SpawnWithOwnership(rpcParams.Receive.SenderClientId); //.receive tem as informmações de quem chamou esse método
     }
+    
+
 
 }
